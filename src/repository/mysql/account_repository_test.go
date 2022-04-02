@@ -51,7 +51,7 @@ func (suite *accountRepositoryTestSuite) AfterTest(_, _ string) {
 }
 
 func (suite *accountRepositoryTestSuite) TestAccountRepository_Find() {
-	password, _ := utils.Hash{}.Make("password")
+	password := utils.Hash{}.Make("password")
 	suite.user = domain.User{
 		ID:       1,
 		Name:     "test name",
@@ -80,7 +80,7 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Find_NotFound() {
 }
 
 func (suite *accountRepositoryTestSuite) TestAccountRepository_Store() {
-	password, _ := utils.Hash{}.Make("password")
+	password := utils.Hash{}.Make("password")
 	suite.user = domain.User{
 		Name:     "test name",
 		Email:    "test@email.com",
@@ -102,7 +102,7 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store() {
 }
 
 func (suite *accountRepositoryTestSuite) TestAccountRepository_Store_ErrorErr() {
-	password, _ := utils.Hash{}.Make("password")
+	password := utils.Hash{}.Make("password")
 	suite.user = domain.User{
 		Name:     "test name",
 		Email:    "test@email.com",
@@ -112,11 +112,11 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store_ErrorErr() 
 	suite.mock.ExpectBegin()
 	suite.mock.ExpectExec("INSERT").
 		WithArgs(suite.user.Name, suite.user.Email, suite.user.Password).
-		WillReturnError(errors.New("FAILED_DATA_IS_NULL"))
+		WillReturnError(errors.New("FAILED_SOMETHING_WENT_WRONG"))
 	suite.mock.ExpectRollback()
 	err := suite.accountRepository.Store(&suite.user)
 	require.NotNil(suite.T(), err)
-	require.Equal(suite.T(), "FAILED_DATA_IS_NULL", err.Error())
+	require.Equal(suite.T(), "FAILED_SOMETHING_WENT_WRONG", err.Error())
 }
 
 func TestAccountRepository(t *testing.T) {

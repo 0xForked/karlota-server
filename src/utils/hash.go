@@ -7,10 +7,10 @@ import (
 type Hash struct{}
 
 // Make returns the hash of the given string.
-func (h Hash) Make(s string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(s), bcrypt.DefaultCost)
+func (h Hash) Make(s string) string {
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(s), bcrypt.DefaultCost)
 
-	return string(bytes), err
+	return string(bytes)
 }
 
 // Verify returns true if the given string matches the given hash.

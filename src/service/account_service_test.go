@@ -20,20 +20,30 @@ type accountTestSuite struct {
 	mock sqlmock.Sqlmock
 
 	user domain.User
+	jwt  utils.JWT
+}
+
+func (suite accountTestSuite) SetupTest() {
+	suite.jwt = utils.JWT{
+		SecretKey:       "secret$%^!@12345://@()",
+		ExpirationHours: 24,
+		Issuer:          "KARLOTA_TEST",
+	}
+
+	suite.user = domain.User{
+		ID:    1,
+		Name:  "Test User",
+		Email: "user@test.id",
+	}
 }
 
 func (suite *accountTestSuite) TestRegister() {
 	accountRepository := new(mocks.AccountRepository)
-	suite.user = domain.User{
-		ID:       1,
-		Name:     "Test User",
-		Email:    "user@test.id",
-		Password: "password",
-	}
+	suite.user.Password = "password"
 	accountRepository.
 		On("Store", &suite.user).
 		Return(nil)
-	svc := service.AccountServiceImpl(accountRepository)
+	svc := service.AccountServiceImpl(accountRepository, suite.jwt)
 	err := svc.Register(&suite.user)
 	require.NoError(suite.T(), err)
 	accountRepository.AssertExpectations(suite.T())
@@ -41,18 +51,12 @@ func (suite *accountTestSuite) TestRegister() {
 
 func (suite *accountTestSuite) TestLogin() {
 	accountRepository := new(mocks.AccountRepository)
-	password, _ := utils.Hash{}.Make("password")
-	suite.user = domain.User{
-		ID:       1,
-		Name:     "Test User",
-		Email:    "user@test.id",
-		Password: password,
-	}
+	suite.user.Password = utils.Hash{}.Make("password")
 	accountRepository.
 		On("Find", mock.Anything).
 		Return(&suite.user, nil).
 		Once()
-	svc := service.AccountServiceImpl(accountRepository)
+	svc := service.AccountServiceImpl(accountRepository, suite.jwt)
 	_, err := svc.Login(suite.user.Email, "password")
 	require.NoError(suite.T(), err)
 	accountRepository.AssertExpectations(suite.T())
@@ -60,18 +64,12 @@ func (suite *accountTestSuite) TestLogin() {
 
 func (suite *accountTestSuite) TestLogin_ShouldError_NotFoundEmail() {
 	accountRepository := new(mocks.AccountRepository)
-	password, _ := utils.Hash{}.Make("password")
-	suite.user = domain.User{
-		ID:       1,
-		Name:     "Test User",
-		Email:    "user@test.id",
-		Password: password,
-	}
+	suite.user.Password = utils.Hash{}.Make("password")
 	accountRepository.
 		On("Find", mock.Anything).
 		Return(nil, errors.New("EMAIL_NOT_FOUND")).
 		Once()
-	svc := service.AccountServiceImpl(accountRepository)
+	svc := service.AccountServiceImpl(accountRepository, suite.jwt)
 	_, err := svc.Login("test@email.wrong", "password")
 	require.Error(suite.T(), err)
 	require.Equal(suite.T(), err.Error(), "EMAIL_NOT_FOUND")
@@ -80,18 +78,12 @@ func (suite *accountTestSuite) TestLogin_ShouldError_NotFoundEmail() {
 
 func (suite *accountTestSuite) TestLogin_ShouldError_InvalidPassword() {
 	accountRepository := new(mocks.AccountRepository)
-	password, _ := utils.Hash{}.Make("password")
-	suite.user = domain.User{
-		ID:       1,
-		Name:     "Test User",
-		Email:    "user@test.id",
-		Password: password,
-	}
+	suite.user.Password = utils.Hash{}.Make("password")
 	accountRepository.
 		On("Find", mock.Anything).
 		Return(&suite.user, nil).
 		Once()
-	svc := service.AccountServiceImpl(accountRepository)
+	svc := service.AccountServiceImpl(accountRepository, suite.jwt)
 	_, err := svc.Login(suite.user.Email, "123456")
 	require.Error(suite.T(), err)
 	require.Equal(suite.T(), err.Error(), "INVALID_PASSWORD")
@@ -100,16 +92,11 @@ func (suite *accountTestSuite) TestLogin_ShouldError_InvalidPassword() {
 
 func (suite *accountTestSuite) TestProfile() {
 	accountRepository := new(mocks.AccountRepository)
-	suite.user = domain.User{
-		ID:    1,
-		Name:  "Test User",
-		Email: "user@test.id",
-	}
 	accountRepository.
 		On("Find", mock.Anything).
 		Return(&suite.user, nil).
 		Once()
-	svc := service.AccountServiceImpl(accountRepository)
+	svc := service.AccountServiceImpl(accountRepository, suite.jwt)
 	user, err := svc.Profile(mock.Anything)
 	require.NoError(suite.T(), err)
 	require.Equal(suite.T(), user, &suite.user)
