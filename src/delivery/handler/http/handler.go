@@ -26,7 +26,11 @@ func NewHttpHandler(config *config.Config, router *gin.Engine) {
 
 	// Account Handler (Auth & Profile)
 	accountRepository := mysql.AccountRepositoryImpl(config.GetDbConn())
-	accountService := service.AccountServiceImpl(accountRepository)
+	accountService := service.AccountServiceImpl(accountRepository, utils.JWT{
+		SecretKey:       config.GetJWTSecretKey(),
+		ExpirationHours: config.GetJWTLifespan(),
+		Issuer:          config.GetAppName(),
+	})
 	account.NewHandler(router, accountService)
 }
 

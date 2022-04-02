@@ -11,10 +11,11 @@ import (
 
 type accountServiceImpl struct {
 	repo mysql.AccountRepository
+	jwt  utils.JWT
 }
 
 func (acc accountServiceImpl) Register(user *domain.User) error {
-	user.Password, _ = utils.Hash{}.Make(user.Password)
+	user.Password = utils.Hash{}.Make(user.Password)
 
 	return acc.repo.Store(user)
 }
@@ -31,10 +32,9 @@ func (acc accountServiceImpl) Login(email string, password string) (interface{},
 	}
 
 	// TODO: ADD TEST FOR THIS
-	jwt := utils.JWT{}
-	lifespan := time.Duration(86400) * time.Second
+	lifespan := time.Duration(acc.jwt.ExpirationHours) * time.Hour
 	tokenExpire := time.Now().Add(lifespan).Unix()
-	token, err := jwt.Claim(user)
+	token, err := acc.jwt.Claim(user)
 	if err != nil {
 		return nil, err
 	}
@@ -50,6 +50,6 @@ func (acc accountServiceImpl) Profile(email string) (*domain.User, error) {
 	return acc.repo.Find(email)
 }
 
-func AccountServiceImpl(repo mysql.AccountRepository) AccountService {
-	return &accountServiceImpl{repo: repo}
+func AccountServiceImpl(repo mysql.AccountRepository, jwt utils.JWT) AccountService {
+	return &accountServiceImpl{repo: repo, jwt: jwt}
 }
