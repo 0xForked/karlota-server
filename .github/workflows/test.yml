@@ -1,5 +1,13 @@
-name: Test
-on: [push, pull_request]
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
 jobs:
   test:
     strategy:
@@ -8,10 +16,18 @@ jobs:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/setup-go@v3
+      - name: Set up Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
-      - uses: actions/checkout@v3
-      - run: cp .env.example .env
-      - run: go mod tidy -compat=1.17
-      - run: go test ./...
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Instal Required Dependencies
+        run: go mod tidy -compat=1.17
+
+      - name: Run Tests
+        run: go test ./...
