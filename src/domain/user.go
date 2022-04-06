@@ -22,7 +22,7 @@ type UserRegisterForm struct {
 	Password string `json:"password" form:"password" binding:"required,gte=6,lte=12" validate:"required" msg:"error_invalid_password"`
 }
 
-var UserFromErrorMessages = map[string]string{
+var UserFormErrorMessages = map[string]string{
 	"error_invalid_name":     "the name filed is required",
 	"error_invalid_email":    "the email filed is required",
 	"error_invalid_password": "the password filed is required, and must be (>=6) & (<=12) characters",

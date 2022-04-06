@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/aasumitro/karlota/src/utils"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
+	"time"
 )
 
 func Authorization(context *gin.Context) {
@@ -23,13 +23,19 @@ func Authorization(context *gin.Context) {
 		return
 	}
 
-	claims, ok := token.Claims.(jwt.MapClaims)
+	claims, ok := token.Claims.(utils.MyJWTClaim)
 	if !ok && !token.Valid {
 		utils.NewHttpRespond(context, 401, "TOKEN_NOT_VALID")
 		context.Abort()
 		return
 	}
 
-	context.Set("payload", claims["payload"])
+	if claims.ExpiresAt < time.Now().Local().Unix() {
+		utils.NewHttpRespond(context, 401, "TOKEN_EXPIRED")
+		context.Abort()
+		return
+	}
+
+	context.Set("payload", claims.Payload)
 	context.Next()
 }

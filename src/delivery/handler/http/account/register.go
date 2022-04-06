@@ -11,7 +11,7 @@ func (handler *accountHandler) register(context *gin.Context) {
 	var form domain.UserRegisterForm
 
 	if err := context.ShouldBind(&form); err != nil {
-		validationError := utils.NewFormRequest(domain.UserFromErrorMessages).Validate(form, err)
+		validationError := utils.NewFormRequest(domain.UserFormErrorMessages).Validate(form, err)
 		utils.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}
