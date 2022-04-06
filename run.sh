@@ -2,7 +2,7 @@ FILE=.env
 if test -f "$FILE"; then
   echo "Everything is OK"
   echo "Validate dependencies . . ."
-  go mod vendor
+  go mod tidy -compat=1.17
   echo "Re-generate Swagger File (api-spec docs) . . ."
   swag init --parseDependency --parseInternal --parseDepth 1
   echo "Trying to run the tests . . ."

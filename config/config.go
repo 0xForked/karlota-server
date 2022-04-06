@@ -34,6 +34,10 @@ func (cfg Config) GetAppName() string {
 	return viper.GetString("APP_NAME")
 }
 
+func (cfg Config) GetAppDesc() string {
+	return viper.GetString("APP_DESC")
+}
+
 func (cfg Config) GetAppDebug() bool {
 	return viper.GetBool("APP_DEBUG")
 }

@@ -23,19 +23,13 @@ func init() {
 	ginEngine = gin.Default()
 
 	docs.SwaggerInfo.BasePath = ginEngine.BasePath()
+	docs.SwaggerInfo.Title = appConfig.GetAppName()
+	docs.SwaggerInfo.Description = appConfig.GetAppDesc()
+	docs.SwaggerInfo.Version = appConfig.GetAppVersion()
+	docs.SwaggerInfo.Host = appConfig.GetAppUrl()
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 }
 
-// StartServer
-// @title KARLOTA - Instant Messaging Service Example
-// @version 1.0
-// @description REST, WebRTC, WebSocket.
-// @termsOfService http://swagger.io/terms/
-// @contact.name @aasumitro
-// @contact.url https://aasumitro.id/
-// @contact.email hello@aasumitro.id
-// @BasePath /api/v1
-// @license.name  MIT
-// @license.url   https://github.com/aasumitro/karlota/blob/master/LICENSE
 func StartServer() {
 	httpDelivery.NewHttpHandler(appConfig, ginEngine)
 
