@@ -1,0 +1,147 @@
+definitions:
+  utils.ErrorRespond:
+    properties:
+      code:
+        type: integer
+      data:
+        type: string
+      status:
+        type: string
+    type: object
+  utils.SuccessRespond:
+    properties:
+      code:
+        type: integer
+      data: {}
+      status:
+        type: string
+    type: object
+  utils.ValidationErrorRespond:
+    properties:
+      code:
+        type: integer
+      data: {}
+      status:
+        type: string
+    type: object
+info:
+  contact:
+    email: hello@aasumitro.id
+    name: '@aasumitro'
+    url: https://aasumitro.id/
+  license:
+    name: MIT
+    url: https://github.com/aasumitro/karlota/blob/master/LICENSE
+paths:
+  /v1/login:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Generate Access Token (JWT).
+      parameters:
+      - description: email address
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: password
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: CREATED_RESPOND
+          schema:
+            $ref: '#/definitions/utils.SuccessRespond'
+        "400":
+          description: BAD_REQUEST_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ErrorRespond'
+        "422":
+          description: UNPROCESSABLE_ENTITY_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ValidationErrorRespond'
+        "500":
+          description: INTERNAL_SERVER_ERROR_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ErrorRespond'
+      summary: Logged User In
+      tags:
+      - AccountHandler
+  /v1/profile:
+    get:
+      description: Get User Data in Detail.
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK_RESPOND
+          schema:
+            $ref: '#/definitions/utils.SuccessRespond'
+        "400":
+          description: BAD_REQUEST_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ErrorRespond'
+        "401":
+          description: UNAUTHORIZED_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ErrorRespond'
+        "500":
+          description: INTERNAL_SERVER_ERROR_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ErrorRespond'
+      summary: User Profile
+      tags:
+      - AccountHandler
+  /v1/register:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Generate new User Account.
+      parameters:
+      - description: full name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: email address
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: password
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: CREATED_RESPOND
+          schema:
+            $ref: '#/definitions/utils.SuccessRespond'
+        "400":
+          description: BAD_REQUEST_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ErrorRespond'
+        "422":
+          description: UNPROCESSABLE_ENTITY_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ValidationErrorRespond'
+        "500":
+          description: INTERNAL_SERVER_ERROR_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ErrorRespond'
+      summary: Register new User
+      tags:
+      - AccountHandler
+swagger: "2.0"
