@@ -7,24 +7,25 @@ import (
 	"net/http"
 )
 
-// login handle.
+// login godoc
 // @Schemes
 // @Summary Logged User In
 // @Description Generate Access Token (JWT).
-// @Tags Karlota Messaging
+// @Tags AccountHandler
 // @Accept mpfd
 // @Produce json
 // @Param email formData string true "email address"
 // @Param password formData string true "password"
-// @Success 201 {object} delivery.HttpSuccessRespond{data=object} "CREATED_RESPOND"
-// @Failure 400 {object} delivery.HttpErrorRespond{data=string} "BAD_REQUEST_RESPOND"
-// @Failure 422 {object} delivery.HttpValidationErrorRespond{data=object} "UNPROCESSABLE_ENTITY_RESPOND"
+// @Success 201 {object} utils.SuccessRespond "CREATED_RESPOND"
+// @Failure 400 {object} utils.ErrorRespond "BAD_REQUEST_RESPOND"
+// @Failure 422 {object} utils.ValidationErrorRespond "UNPROCESSABLE_ENTITY_RESPOND"
+// @Failure 500 {object} utils.ErrorRespond "INTERNAL_SERVER_ERROR_RESPOND"
 // @Router /v1/login [POST]
 func (handler *accountHandler) login(context *gin.Context) {
 	var form domain.UserLoginForm
 
 	if err := context.ShouldBind(&form); err != nil {
-		validationError := utils.NewFormRequest(domain.UserFromErrorMessages).Validate(form, err)
+		validationError := utils.NewFormRequest(domain.UserFormErrorMessages).Validate(form, err)
 		utils.NewHttpRespond(context, http.StatusUnprocessableEntity, validationError)
 		return
 	}

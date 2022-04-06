@@ -7,30 +7,23 @@ import (
 
 // SuccessRespond message
 type SuccessRespond struct {
-	Code   int         `json:"code" example:"200"`
-	Status string      `json:"status" example:"OK"`
+	Code   int         `json:"code"`
+	Status string      `json:"status"`
 	Data   interface{} `json:"data"`
 }
 
 // ErrorRespond message
 type ErrorRespond struct {
-	Code   int    `json:"code" example:"400"`
-	Status string `json:"status" example:"Bad Request"`
+	Code   int    `json:"code"`
+	Status string `json:"status"`
 	Data   string `json:"data"`
 }
 
 // ValidationErrorRespond message
 type ValidationErrorRespond struct {
-	Code   int         `json:"code" example:"422"`
-	Status string      `json:"status" example:"Unprocessable Entity"`
+	Code   int         `json:"code"`
+	Status string      `json:"status"`
 	Data   interface{} `json:"data"`
-}
-
-// ServerErrorRespond message
-type ServerErrorRespond struct {
-	Code   int    `json:"code" example:"500"`
-	Status string `json:"status" example:"Internal Server Error"`
-	Data   string `json:"data"`
 }
 
 func NewHttpRespond(context *gin.Context, code int, data interface{}) {

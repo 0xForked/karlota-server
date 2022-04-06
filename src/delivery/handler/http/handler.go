@@ -26,19 +26,20 @@ func NewHttpHandler(config *config.Config, router *gin.Engine) {
 
 	// Account Handler (Auth & Profile)
 	accountRepository := mysql.AccountRepositoryImpl(config.GetDbConn())
-	accountService := service.AccountServiceImpl(accountRepository, utils.JWT{
+	jwtUtils := utils.JWT{
 		SecretKey:       config.GetJWTSecretKey(),
 		ExpirationHours: config.GetJWTLifespan(),
 		Issuer:          config.GetAppName(),
-	})
-	account.NewHandler(router, accountService)
+	}
+	accountService := service.AccountServiceImpl(accountRepository, jwtUtils)
+	account.NewHandler(router, accountService, jwtUtils)
 }
 
 func (handler httpHandler) home(context *gin.Context) {
 	utils.NewHttpRespond(context, http.StatusOK, map[string]interface{}{
 		"01_title":       "Karlota",
 		"02_description": " Instant Messaging Service Example",
-		"03_api_spec":    fmt.Sprintf("%s/docs/index.html", context.Request.Host),
+		"03_api_spec":    fmt.Sprintf("http://%s/docs/index.html", context.Request.Host),
 		"04_perquisites": map[string]interface{}{
 			"01_language":  "https://github.com/golang/go",
 			"02_framework": "https://github.com/gin-gonic/gin",

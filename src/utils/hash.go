@@ -7,15 +7,18 @@ import (
 type Hash struct{}
 
 // Make returns the hash of the given string.
-func (h Hash) Make(s string) string {
-	bytes, _ := bcrypt.GenerateFromPassword([]byte(s), bcrypt.DefaultCost)
-
+func (h Hash) Make(plain string) string {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(plain), bcrypt.DefaultCost)
+	if err != nil {
+		return ""
+	}
+	
 	return string(bytes)
 }
 
 // Verify returns true if the given string matches the given hash.
-func (h Hash) Verify(s, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(s))
+func (h Hash) Verify(plain, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(plain))
 
 	return err == nil
 }

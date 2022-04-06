@@ -31,10 +31,10 @@ func (acc accountServiceImpl) Login(email string, password string) (interface{},
 		return nil, errors.New("INVALID_PASSWORD")
 	}
 
-	// TODO: ADD TEST FOR THIS
 	lifespan := time.Duration(acc.jwt.ExpirationHours) * time.Hour
 	tokenExpire := time.Now().Add(lifespan).Unix()
 	token, err := acc.jwt.Claim(user)
+	// TODO: ADD TEST FOR THIS
 	if err != nil {
 		return nil, err
 	}

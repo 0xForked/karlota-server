@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"errors"
 	"fmt"
 	"github.com/aasumitro/karlota/src/domain"
 	"github.com/golang-jwt/jwt"
@@ -15,13 +14,13 @@ type JWT struct {
 	ExpirationHours int64
 }
 
-type myClaim struct {
+type MyJWTClaim struct {
 	jwt.StandardClaims
 	Payload interface{} `json:"payload"`
 }
 
 func (j *JWT) Claim(user *domain.User) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, myClaim{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyJWTClaim{
 		StandardClaims: jwt.StandardClaims{
 			Issuer:    j.Issuer,
 			IssuedAt:  time.Now().Unix(),
@@ -43,31 +42,6 @@ func (j *JWT) Verify(signedToken string) (*jwt.Token, error) {
 
 		return []byte(j.SecretKey), nil
 	})
-}
-
-func (j *JWT) Validate(signedToken string) (*myClaim, error) {
-	token, err := jwt.ParseWithClaims(
-		signedToken,
-		&myClaim{},
-		func(token *jwt.Token) (interface{}, error) {
-			return []byte(j.SecretKey), nil
-		},
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	claims, ok := token.Claims.(*myClaim)
-	if !ok {
-		return nil, errors.New("Couldn't parse claims")
-	}
-
-	if claims.ExpiresAt < time.Now().Local().Unix() {
-		return nil, errors.New("JWT is expired")
-	}
-
-	return claims, nil
 }
 
 // ExtractFromHeader SendFrom Middleware c.Request.Header.Get("Authorization")

@@ -16,6 +16,7 @@ const (
 )
 
 func (cfg Config) InitDbConn() {
+	log.Println("Trying to open database connection . . . .")
 	conn, err := openConnection(cfg)
 
 	if err != nil {
@@ -24,6 +25,7 @@ func (cfg Config) InitDbConn() {
 			err.Error()))
 	}
 
+	log.Println(fmt.Sprintf("Database connected with %s driver . . . .", cfg.GetDbDriver()))
 	setConnection(conn)
 }
 
