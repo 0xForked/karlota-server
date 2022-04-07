@@ -1,14 +1,33 @@
 package domain
 
+import (
+	"fmt"
+	"gorm.io/gorm"
+	"log"
+)
+
 type User struct {
-	ID       int64  `gorm:"column:id;primarykey" sql:"index" json:"id"`
-	Name     string `gorm:"column:name" json:"name"`
-	Email    string `gorm:"column:email;unique" json:"email" binding:"required"`
-	Password string `gorm:"column:password" json:"-" binding:"required"`
+	ID           uint          `gorm:"column:id;primaryKey;autoIncrement;not null" json:"id"`
+	Name         string        `gorm:"column:name;not null;type:varchar(100)" json:"name"`
+	Email        string        `gorm:"column:email;unique;not null" json:"email"`
+	Password     string        `gorm:"column:password;not null;type:varchar(225)" json:"-"`
+	Participants []Participant `gorm:"foreignKey:user_id"`
 }
 
 func (User) TableName() string {
 	return "users"
+}
+
+func (User) Migrate(db *gorm.DB) {
+	if !db.Migrator().HasTable(User{}.TableName()) {
+		if err := db.Migrator().AutoMigrate(User{}); err != nil {
+			log.Panicln(fmt.Sprintf(
+				"MIGRATE_ERROR(%s): %s",
+				User{}.TableName(),
+				err.Error(),
+			))
+		}
+	}
 }
 
 type UserLoginForm struct {

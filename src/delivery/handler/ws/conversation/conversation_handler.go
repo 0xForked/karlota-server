@@ -18,3 +18,26 @@ package conversation
 // send_event: send message to chat
 // send_typing_indicator: send typing indicator to chat
 // mark_event_as_seen: mark event as seen
+
+// start_chat
+// DATA:
+// 1. type (string)
+// 2. participants (array of user_id (uint))
+// FLOW:
+// 1. create Conversation
+// 2. create Participant
+
+// list_chat
+// DATA:
+// 1. user_id (uint)
+// FLOW:
+// 1. Select Conversation where user_id is in Participant
+// 2. Display Conversation by Type (room, private)
+//		a. if private, display friends name
+//		b. if room, display room name
+
+// get_chat
+// DATA:
+// 1. user_id (uint)
+// FLOW:
+// 1. Select Message join Participant join User
