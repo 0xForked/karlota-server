@@ -48,8 +48,7 @@ func openConnection(cfg Config) (db *gorm.DB, err error) {
 
 	return gorm.Open(driver, &gorm.Config{
 		SkipDefaultTransaction: true,
-		// PrepareStmt: true is causing migrator to fail
-		PrepareStmt: true,
+		PrepareStmt:            true,
 	})
 }
 

@@ -13,7 +13,6 @@ import (
 	"net/http"
 )
 
-// main route handler
 type httpHandler struct{}
 
 func NewHttpHandler(config *config.Config, router *gin.Engine) {
@@ -24,7 +23,6 @@ func NewHttpHandler(config *config.Config, router *gin.Engine) {
 	router.GET("/ping", handler.ping)
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	// Account Handler (Auth & Profile)
 	accountRepository := mysql.AccountRepositoryImpl(config.GetDbConn())
 	jwtUtils := utils.JWT{
 		SecretKey:       config.GetJWTSecretKey(),

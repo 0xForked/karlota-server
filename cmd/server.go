@@ -4,6 +4,7 @@ import (
 	"github.com/aasumitro/karlota/config"
 	"github.com/aasumitro/karlota/docs"
 	httpDelivery "github.com/aasumitro/karlota/src/delivery/handler/http"
+	wsDelivery "github.com/aasumitro/karlota/src/delivery/handler/ws"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -32,6 +33,8 @@ func init() {
 
 func StartServer() {
 	httpDelivery.NewHttpHandler(appConfig, ginEngine)
+
+	wsDelivery.NewWsHandler(appConfig, ginEngine)
 
 	log.Fatal(ginEngine.Run(appConfig.GetAppUrl()))
 }

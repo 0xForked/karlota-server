@@ -9,13 +9,6 @@ type accountRepositoryImpl struct {
 	db *gorm.DB
 }
 
-func init() {
-	// TODO: implement
-	// User Table Migration
-	// and if table is new created
-	// run data seeder
-}
-
 func (acc accountRepositoryImpl) Store(user *domain.User) error {
 	if err := acc.db.Create(&user).Error; err != nil {
 		return err
