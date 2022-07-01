@@ -1,7 +1,12 @@
 package domain
 
 import (
+	"database/sql"
 	"database/sql/driver"
+	"fmt"
+	"gorm.io/gorm"
+	"log"
+	"time"
 )
 
 type ConversationType string
@@ -14,6 +19,7 @@ const (
 
 func (t *ConversationType) Scan(value interface{}) error {
 	*t = ConversationType(value.([]byte))
+
 	return nil
 }
 
@@ -21,21 +27,33 @@ func (t ConversationType) Value() (driver.Value, error) {
 	return string(t), nil
 }
 
+// Conversation
+// name & avatar will be NULL when Type is Private
+// DATE with Soft-delete
 type Conversation struct {
-	ID   int64            `gorm:"column:id;primary_key" sql:"index" json:"id"`
-	Type ConversationType `gorm:"column:type" sql:"type:ENUM('private', 'group');default:'private'" json:"type"`
-	// name & avatar will be NULL when Type is Private
-	Name   string `json:"name"`
-	Avatar string `json:"avatar"`
-	// DATE with Soft-delete and archived
-	CreatedAt  int64 `json:"created_at"`
-	UpdatedAt  int64 `json:"updated_at"`
-	DeletedAt  int64 `json:"deleted_at"`
-	ArchivedAt int64 `json:"archived_at"`
-	// RELATIONSHIPS
-	// 1:n Participants, 1:n Messages
+	ID           uint             `gorm:"column:id;primaryKey;autoIncrement;not null" json:"id"`
+	Type         ConversationType `gorm:"column:type;type:ENUM('private','group');default:'private'" json:"type"`
+	Name         sql.NullString   `gorm:"column:name" json:"name"`
+	Avatar       sql.NullString   `gorm:"column:avatar" json:"avatar"`
+	CreatedAt    time.Time        `gorm:"column:created_at;index;autoCreateTime" json:"created_at"`
+	UpdatedAt    sql.NullTime     `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
+	DeletedAt    gorm.DeletedAt   `gorm:"column:deleted_at;index;"`
+	Participants []Participant    `gorm:"foreignKey:conversation_id"`
+	Messages     []Message        `gorm:"foreignKey:conversation_id"`
 }
 
 func (Conversation) TableName() string {
 	return "conversations"
+}
+
+func (Conversation) Migrate(db *gorm.DB) {
+	if !db.Migrator().HasTable(Conversation{}.TableName()) {
+		if err := db.Migrator().AutoMigrate(Conversation{}); err != nil {
+			log.Panicln(fmt.Sprintf(
+				"MIGRATE_ERROR(%s): %s",
+				Conversation{}.TableName(),
+				err.Error(),
+			))
+		}
+	}
 }

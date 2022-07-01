@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/aasumitro/karlota/src/domain"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -20,13 +21,14 @@ func (cfg Config) InitDbConn() {
 	conn, err := openConnection(cfg)
 
 	if err != nil {
-		log.Panicln(fmt.Sprintf(
-			"DATABASE_ERROR: %s",
-			err.Error()))
+		log.Panicln(fmt.Sprintf("DATABASE_ERROR: %s", err.Error()))
 	}
 
 	log.Println(fmt.Sprintf("Database connected with %s driver . . . .", cfg.GetDbDriver()))
 	setConnection(conn)
+
+	log.Println("Auto migrate tables . . . .")
+	runMigration(conn)
 }
 
 func openConnection(cfg Config) (db *gorm.DB, err error) {
@@ -44,11 +46,21 @@ func openConnection(cfg Config) (db *gorm.DB, err error) {
 		break
 	}
 
-	return gorm.Open(driver, &gorm.Config{})
+	return gorm.Open(driver, &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
 }
 
 func setConnection(conn *gorm.DB) {
 	db = conn
+}
+
+func runMigration(conn *gorm.DB) {
+	domain.User{}.Migrate(conn)
+	domain.Conversation{}.Migrate(conn)
+	domain.Participant{}.Migrate(conn)
+	domain.Message{}.Migrate(conn)
 }
 
 func (cfg Config) GetDbConn() *gorm.DB {

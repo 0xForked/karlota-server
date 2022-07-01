@@ -34,7 +34,6 @@ func (acc accountServiceImpl) Login(email string, password string) (interface{},
 	lifespan := time.Duration(acc.jwt.ExpirationHours) * time.Hour
 	tokenExpire := time.Now().Add(lifespan).Unix()
 	token, err := acc.jwt.Claim(user)
-	// TODO: ADD TEST FOR THIS
 	if err != nil {
 		return nil, err
 	}
