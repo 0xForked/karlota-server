@@ -11,7 +11,7 @@ type User struct {
 	Name         string        `gorm:"column:name;not null;type:varchar(100)" json:"name"`
 	Email        string        `gorm:"column:email;unique;not null" json:"email"`
 	Password     string        `gorm:"column:password;not null;type:varchar(225)" json:"-"`
-	Participants []Participant `gorm:"foreignKey:user_id"`
+	Participants []Participant `gorm:"foreignKey:user_id" json:"-"`
 }
 
 func (User) TableName() string {

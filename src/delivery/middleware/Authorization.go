@@ -7,10 +7,8 @@ import (
 	"net/http"
 )
 
-func Authorization(jwtUtils utils.JWT, jwtToken ...string) gin.HandlerFunc {
+func Authorization(jwtUtils utils.JWT) gin.HandlerFunc {
 	return func(context *gin.Context) {
-		// TODO validate jwtToken for WebSocket Connection
-
 		authorizationHeader := context.Request.Header.Get("Authorization")
 		if authorizationHeader == "" {
 			utils.NewHttpRespond(context, 401, "AUTHORIZATION_HEADER_REQUIRED")

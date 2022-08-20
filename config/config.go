@@ -63,5 +63,5 @@ func (cfg Config) GetJWTSecretKey() string {
 }
 
 func (cfg Config) GetJWTLifespan() int64 {
-	return viper.GetInt64("JWT_LIFESPAN")
+	return viper.GetInt64("JWT_LIFETIME")
 }
