@@ -1,7 +1,7 @@
 <!-- THIS JUST FOR TEST THE WS CONN -->
 <html>
 <head>
-    <title>Melody example: chatting</title>
+    <title>example: chatting</title>
 </head>
 
 <style>
@@ -16,15 +16,18 @@
 
 <body>
 <center>
-    <h3>Chat</h3>
+    <h3 id="name"></h3>
     <pre id="chat"></pre>
     <input placeholder="say something" id="text" type="text">
 </center>
 
 <script>
-    // url?{name}
-    let name = window.location.search.substring(1) ?? 'guest';
-    let url = "ws://localhost:8000/ws";
+    // ACCESS
+    // http://127.0.0.1:8080/?name=lorem&conversation=ipsum
+    let currUrl = new URL(window.location);
+    let name = currUrl.searchParams.get("name") ?? 'guest';
+    let path = currUrl.searchParams.get("conversation") ?? '12345';
+    let url = "ws://localhost:8000/conversation/" + path + "/ws";
     let ws = new WebSocket(url);
 
     let chat = document.getElementById("chat");

@@ -12,11 +12,13 @@ func NewWsHandler(config *config.Config, router *gin.Engine) {
 	//handler := &wsHandler{}
 	m := ws.New()
 
-	router.GET("/ws", func(c *gin.Context) {
+	router.GET("/conversation/:id/ws", func(c *gin.Context) {
 		m.HandleRequest(c.Writer, c.Request)
 	})
 
 	m.HandleMessage(func(s *ws.Session, msg []byte) {
-		m.Broadcast(msg)
+		m.BroadcastFilter(msg, func(q *ws.Session) bool {
+			return q.Request.URL.Path == s.Request.URL.Path
+		})
 	})
 }
