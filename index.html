@@ -1,0 +1,52 @@
+<!-- THIS JUST FOR TEST THE WS CONN -->
+<html>
+<head>
+    <title>Melody example: chatting</title>
+</head>
+
+<style>
+    #chat {
+        text-align: left;
+        background: #f1f1f1;
+        width: 500px;
+        min-height: 300px;
+        padding: 20px;
+    }
+</style>
+
+<body>
+<center>
+    <h3>Chat</h3>
+    <pre id="chat"></pre>
+    <input placeholder="say something" id="text" type="text">
+</center>
+
+<script>
+    // url?{name}
+    let name = window.location.search.substring(1) ?? 'guest';
+    let url = "ws://localhost:8000/ws";
+    let ws = new WebSocket(url);
+
+    let chat = document.getElementById("chat");
+    let text = document.getElementById("text");
+
+    let now = function () {
+        let iso = new Date().toISOString();
+        return iso.split("T")[1].split(".")[0];
+    };
+
+    ws.onmessage = function (msg) {
+        let line =  now() + " " + msg.data + "\n";
+        chat.innerText += line;
+    };
+
+    text.onkeydown = function (e) {
+        if (e.keyCode === 13 && text.value !== "") {
+            ws.send("<" + name + "> " + text.value);
+            text.value = "";
+        }
+    };
+
+</script>
+</body>
+</html>
