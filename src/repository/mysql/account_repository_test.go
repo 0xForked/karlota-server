@@ -121,10 +121,16 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store_Error() {
 }
 
 func (suite *accountRepositoryTestSuite) TestAccountRepository_All_ShouldSuccess() {
-	user := suite.mock.NewRows([]string{"id", "name", "email"})
-	user.AddRow(1, "test name", "test@email.com")
-	user.AddRow(2, "test name 2", "test2@email.com")
-	suite.mock.ExpectQuery("SELECT").WillReturnRows(user)
+	user := suite.mock.
+		NewRows([]string{"id", "name", "email"}).
+		AddRow(1, "test name", "test@email.com").
+		AddRow(2, "test name 2", "test2@email.com")
+
+	suite.mock.
+		ExpectQuery("SELECT").
+		WithArgs(). // TODO IF NEED PAGINATION
+		WillReturnRows(user)
+
 	res, err := suite.accountRepository.All()
 	require.Nil(suite.T(), err)
 	require.NotNil(suite.T(), res)
@@ -134,9 +140,8 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_All_ShouldSuccess
 func (suite *accountRepositoryTestSuite) TestAccountRepository_All_ShouldError() {
 	suite.mock.ExpectQuery("SELECT").
 		WillReturnError(errors.New("NOT_FOUND"))
-	res, err := suite.accountRepository.All()
+	_, err := suite.accountRepository.All()
 	require.Equal(suite.T(), err.Error(), "NOT_FOUND")
-	require.Equal(suite.T(), &[]domain.User{}, res)
 	require.Error(suite.T(), err)
 }
 

@@ -30,7 +30,7 @@ func (acc accountRepositoryImpl) Find(email string) (*domain.User, error) {
 func (acc accountRepositoryImpl) All() (*[]domain.User, error) {
 	var users []domain.User
 
-	if err := acc.db.Select(&users).Error; err != nil {
+	if err := acc.db.Find(&users).Error; err != nil {
 		return &users, err
 	}
 

@@ -23,7 +23,8 @@ func NewHandler(router *gin.Engine, service service.AccountService, jwt utils.JW
 		authorized := v1.Group("")
 		authorized.Use(middleware.Authorization(jwt))
 		{
-			authorized.GET("/profile", handler.profile).Use()
+			authorized.GET("/profile", handler.profile)
+			authorized.GET("/users", handler.users)
 		}
 	}
 }
