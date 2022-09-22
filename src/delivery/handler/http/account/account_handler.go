@@ -17,14 +17,15 @@ func NewHandler(router *gin.Engine, service service.AccountService, jwt utils.JW
 
 	v1 := handler.router.Group("/v1")
 	{
-		v1.POST("/register", handler.register)
-		v1.POST("/login", handler.login)
+		v1.POST("/register", handler.signUp)
+		v1.POST("/login", handler.signIn)
 
 		authorized := v1.Group("")
 		authorized.Use(middleware.Authorization(jwt))
 		{
 			authorized.GET("/profile", handler.profile)
 			authorized.GET("/users", handler.users)
+			// authorized.GET("/logout", handler.signOut)
 		}
 	}
 }

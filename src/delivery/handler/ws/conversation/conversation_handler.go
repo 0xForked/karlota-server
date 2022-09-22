@@ -9,7 +9,7 @@ package conversation
 // mark_event_as_seen,
 
 // list_chat: load user list chat
-// get_chat: load selected chat thread (events: (message: text, image, custom), participants)
+// get_chat: load selected chat thread (event: (message: text, image, custom), participants)
 // start_chat: create new chat by with selected participants
 // add_user_to_chat and remove_user_from_chat: add/remove user to chat for chat type room
 // but, it is possible to add/remove user to chat for chat type private (just in case: video or voice)

@@ -85,6 +85,7 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store() {
 	suite.user = domain.User{
 		Name:     "test name",
 		Email:    "test@email.com",
+		IsOnline: false,
 		Password: password,
 	}
 	suite.mock.MatchExpectationsInOrder(false)
@@ -93,7 +94,12 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store() {
 	//if you have query (i.e. use SELECT), you should use ExpectQuery
 	//query := `insert into test_table \(name, email, password\) values \(\$1, \$2\,\$3\)`
 	suite.mock.ExpectExec("INSERT").
-		WithArgs(suite.user.Name, suite.user.Email, suite.user.Password).
+		WithArgs(
+			suite.user.Name,
+			suite.user.Email,
+			suite.user.IsOnline,
+			suite.user.Password,
+		).
 		WillReturnResult(driver.ResultNoRows).
 		WillReturnError(nil)
 	suite.mock.ExpectCommit()
@@ -107,12 +113,18 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store_Error() {
 	suite.user = domain.User{
 		Name:     "test name",
 		Email:    "test@email.com",
+		IsOnline: false,
 		Password: password,
 	}
 	suite.mock.MatchExpectationsInOrder(false)
 	suite.mock.ExpectBegin()
 	suite.mock.ExpectExec("INSERT").
-		WithArgs(suite.user.Name, suite.user.Email, suite.user.Password).
+		WithArgs(
+			suite.user.Name,
+			suite.user.Email,
+			suite.user.IsOnline,
+			suite.user.Password,
+		).
 		WillReturnError(errors.New("FAILED_SOMETHING_WENT_WRONG"))
 	suite.mock.ExpectRollback()
 	err := suite.accountRepository.Store(&suite.user)

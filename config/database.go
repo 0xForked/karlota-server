@@ -57,9 +57,6 @@ func setConnection(conn *gorm.DB) {
 
 func runMigration(conn *gorm.DB) {
 	domain.User{}.Migrate(conn)
-	//domain.Conversation{}.Migrate(conn)
-	//domain.Participant{}.Migrate(conn)
-	//domain.Message{}.Migrate(conn)
 }
 
 func (cfg Config) GetDbConn() *gorm.DB {

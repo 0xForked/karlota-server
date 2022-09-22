@@ -144,4 +144,34 @@ paths:
       summary: Register new User
       tags:
       - AccountHandler
+  /v1/users:
+    get:
+      description: Get User List.
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK_RESPOND
+          schema:
+            $ref: '#/definitions/utils.SuccessRespond'
+        "400":
+          description: BAD_REQUEST_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ErrorRespond'
+        "401":
+          description: UNAUTHORIZED_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ErrorRespond'
+        "500":
+          description: INTERNAL_SERVER_ERROR_RESPOND
+          schema:
+            $ref: '#/definitions/utils.ErrorRespond'
+      summary: User List
+      tags:
+      - AccountHandler
 swagger: "2.0"

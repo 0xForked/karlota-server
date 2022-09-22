@@ -177,6 +177,51 @@
                     }
                 }
             }
+        },
+        "/v1/users": {
+            "get": {
+                "description": "Get User List.",
+                "tags": [
+                    "AccountHandler"
+                ],
+                "summary": "User List",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK_RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.SuccessRespond"
+                        }
+                    },
+                    "400": {
+                        "description": "BAD_REQUEST_RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ErrorRespond"
+                        }
+                    },
+                    "401": {
+                        "description": "UNAUTHORIZED_RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ErrorRespond"
+                        }
+                    },
+                    "500": {
+                        "description": "INTERNAL_SERVER_ERROR_RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ErrorRespond"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
