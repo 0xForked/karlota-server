@@ -42,8 +42,7 @@ func openConnection(cfg Config) (db *gorm.DB, err error) {
 		driver = mysql.Open(cfg.GetDbDsnUrl())
 		break
 	default:
-		driver = mysql.Open(cfg.GetDbDsnUrl())
-		break
+		log.Panicln(fmt.Sprintf("DATABASE_ERROR: Database driver not supported!"))
 	}
 
 	return gorm.Open(driver, &gorm.Config{

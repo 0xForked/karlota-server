@@ -22,12 +22,13 @@ type accountRepositoryTestSuite struct {
 
 	accountRepository repo.AccountRepository
 	user              domain.User
+	users             []domain.User
 }
 
-//SetupSuite is useful in cases where the setup code is time-consuming and isn't modified in any of the tests.
-//An example of when this could be useful is if you were testing code that reads from a database,
-//and all the tests used the same data and only ran SELECT statements. In this scenario,
-//SetupSuite could be used once to load the database with data.
+// SetupSuite is useful in cases where the setup code is time-consuming and isn't modified in any of the tests.
+// An example of when this could be useful is if you were testing code that reads from a database,
+// and all the tests used the same data and only ran SELECT statements. In this scenario,
+// SetupSuite could be used once to load the database with data.
 func (suite *accountRepositoryTestSuite) SetupSuite() {
 	var (
 		db  *sql.DB
@@ -101,7 +102,7 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store() {
 	require.NoError(suite.T(), err)
 }
 
-func (suite *accountRepositoryTestSuite) TestAccountRepository_Store_ErrorErr() {
+func (suite *accountRepositoryTestSuite) TestAccountRepository_Store_Error() {
 	password := utils.Hash{}.Make("password")
 	suite.user = domain.User{
 		Name:     "test name",
@@ -117,6 +118,26 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store_ErrorErr() 
 	err := suite.accountRepository.Store(&suite.user)
 	require.NotNil(suite.T(), err)
 	require.Equal(suite.T(), "FAILED_SOMETHING_WENT_WRONG", err.Error())
+}
+
+func (suite *accountRepositoryTestSuite) TestAccountRepository_All_ShouldSuccess() {
+	user := suite.mock.NewRows([]string{"id", "name", "email"})
+	user.AddRow(1, "test name", "test@email.com")
+	user.AddRow(2, "test name 2", "test2@email.com")
+	suite.mock.ExpectQuery("SELECT").WillReturnRows(user)
+	res, err := suite.accountRepository.All()
+	require.Nil(suite.T(), err)
+	require.NotNil(suite.T(), res)
+	require.NoError(suite.T(), err)
+}
+
+func (suite *accountRepositoryTestSuite) TestAccountRepository_All_ShouldError() {
+	suite.mock.ExpectQuery("SELECT").
+		WillReturnError(errors.New("NOT_FOUND"))
+	res, err := suite.accountRepository.All()
+	require.Equal(suite.T(), err.Error(), "NOT_FOUND")
+	require.Equal(suite.T(), &[]domain.User{}, res)
+	require.Error(suite.T(), err)
 }
 
 func TestAccountRepository(t *testing.T) {

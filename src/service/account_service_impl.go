@@ -49,6 +49,10 @@ func (acc accountServiceImpl) Profile(email string) (*domain.User, error) {
 	return acc.repo.Find(email)
 }
 
+func (acc accountServiceImpl) List() (*[]domain.User, error) {
+	return acc.repo.All()
+}
+
 func AccountServiceImpl(repo mysql.AccountRepository, jwt utils.JWT) AccountService {
 	return &accountServiceImpl{repo: repo, jwt: jwt}
 }

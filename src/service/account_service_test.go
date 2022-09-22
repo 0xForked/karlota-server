@@ -19,11 +19,12 @@ type accountTestSuite struct {
 	DB   *gorm.DB
 	mock sqlmock.Sqlmock
 
-	user domain.User
-	jwt  utils.JWT
+	user  domain.User
+	users []domain.User
+	jwt   utils.JWT
 }
 
-func (suite accountTestSuite) SetupTest() {
+func (suite *accountTestSuite) SetupTest() {
 	suite.jwt = utils.JWT{
 		SecretKey:       "secret$%^!@12345://@()",
 		ExpirationHours: 24,
@@ -34,6 +35,19 @@ func (suite accountTestSuite) SetupTest() {
 		ID:    1,
 		Name:  "Test User",
 		Email: "user@test.id",
+	}
+
+	suite.users = []domain.User{
+		{
+			ID:    1,
+			Name:  "Test User",
+			Email: "user@test.id",
+		},
+		{
+			ID:    2,
+			Name:  "Test User Two",
+			Email: "user2@test.id",
+		},
 	}
 }
 
@@ -100,6 +114,19 @@ func (suite *accountTestSuite) TestProfile() {
 	user, err := svc.Profile(mock.Anything)
 	require.NoError(suite.T(), err)
 	require.Equal(suite.T(), user, &suite.user)
+	accountRepository.AssertExpectations(suite.T())
+}
+
+func (suite *accountTestSuite) TestListAccount() {
+	accountRepository := new(mocks.AccountRepository)
+	accountRepository.
+		On("All", mock.Anything).
+		Return(&suite.users, nil).
+		Once()
+	svc := service.AccountServiceImpl(accountRepository, suite.jwt)
+	users, err := svc.List()
+	require.NoError(suite.T(), err)
+	require.Equal(suite.T(), users, &suite.users)
 	accountRepository.AssertExpectations(suite.T())
 }
 

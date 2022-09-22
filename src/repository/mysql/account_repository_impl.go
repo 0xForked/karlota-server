@@ -27,6 +27,16 @@ func (acc accountRepositoryImpl) Find(email string) (*domain.User, error) {
 	return &user, nil
 }
 
+func (acc accountRepositoryImpl) All() (*[]domain.User, error) {
+	var users []domain.User
+
+	if err := acc.db.Select(&users).Error; err != nil {
+		return &users, err
+	}
+
+	return &users, nil
+}
+
 func AccountRepositoryImpl(db *gorm.DB) AccountRepository {
 	return &accountRepositoryImpl{db: db}
 }

@@ -71,3 +71,26 @@ func (_m *AccountService) Register(user *domain.User) error {
 
 	return r0
 }
+
+// List provides a mock function with given fields:
+func (_m *AccountRepository) List() (*[]domain.User, error) {
+	ret := _m.Called()
+
+	var r0 *[]domain.User
+	if rf, ok := ret.Get(0).(func() *[]domain.User); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*[]domain.User)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
