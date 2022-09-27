@@ -53,6 +53,30 @@ func (acc accountServiceImpl) List() (*[]domain.User, error) {
 	return acc.repo.All()
 }
 
+func (acc accountServiceImpl) Edit(user *domain.User) error {
+	fcmToken := user.FCMToken
+	newPassword := user.Password
+
+	user, err := acc.repo.Find(user.Email)
+	if err != nil {
+		return errors.New("USER_NOT_FOUND")
+	}
+
+	if fcmToken != "" {
+		user.FCMToken = fcmToken
+	}
+
+	if newPassword != "" {
+		user.Password = utils.Hash{}.Make(newPassword)
+	}
+
+	if err := acc.repo.Update(user); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func AccountServiceImpl(repo mysql.AccountRepository, jwt utils.JWT) AccountService {
 	return &accountServiceImpl{repo: repo, jwt: jwt}
 }

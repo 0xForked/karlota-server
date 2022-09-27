@@ -354,6 +354,7 @@ func TestUpgrader(t *testing.T) {
 	}
 }
 
+//goland:noinspection ALL
 func TestBroadcast(t *testing.T) {
 	broadcast := NewTestServer()
 	broadcast.m.HandleMessage(func(session *Session, msg []byte) {
@@ -415,6 +416,7 @@ func TestBroadcast(t *testing.T) {
 	}
 }
 
+//goland:noinspection ALL
 func TestBroadcastBinary(t *testing.T) {
 	broadcast := NewTestServer()
 	broadcast.m.HandleMessageBinary(func(session *Session, msg []byte) {
@@ -481,6 +483,7 @@ func TestBroadcastBinary(t *testing.T) {
 	}
 }
 
+//goland:noinspection ALL
 func TestBroadcastOthers(t *testing.T) {
 	broadcast := NewTestServer()
 	broadcast.m.HandleMessage(func(session *Session, msg []byte) {
@@ -544,6 +547,7 @@ func TestBroadcastOthers(t *testing.T) {
 	}
 }
 
+//goland:noinspection GoDeferInLoop
 func TestBroadcastBinaryOthers(t *testing.T) {
 	broadcast := NewTestServer()
 	broadcast.m.HandleMessageBinary(func(session *Session, msg []byte) {
@@ -580,7 +584,7 @@ func TestBroadcastBinaryOthers(t *testing.T) {
 			}(listeners[i])
 		}
 
-		err := conn.WriteMessage(websocket.BinaryMessage, []byte(msg))
+		err := conn.WriteMessage(websocket.BinaryMessage, msg)
 		if err != nil {
 			return false
 		}
@@ -723,7 +727,7 @@ func TestBroadcastBinaryFilter(t *testing.T) {
 			return false
 		}
 
-		if err := conn.WriteMessage(websocket.BinaryMessage, []byte(msg)); err != nil {
+		if err := conn.WriteMessage(websocket.BinaryMessage, msg); err != nil {
 			return false
 		}
 

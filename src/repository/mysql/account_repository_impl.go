@@ -9,6 +9,14 @@ type accountRepositoryImpl struct {
 	db *gorm.DB
 }
 
+func (acc accountRepositoryImpl) Update(user *domain.User) error {
+	if err := acc.db.Where("email = ?", user.Email).Save(&user).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (acc accountRepositoryImpl) Store(user *domain.User) error {
 	if err := acc.db.Create(&user).Error; err != nil {
 		return err

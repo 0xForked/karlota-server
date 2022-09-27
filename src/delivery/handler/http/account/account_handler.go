@@ -25,6 +25,8 @@ func NewHandler(router *gin.Engine, service service.AccountService, jwt utils.JW
 		{
 			authorized.GET("/profile", handler.profile)
 			authorized.GET("/users", handler.users)
+			authorized.POST("/update/fcm", handler.updateFCMToken)
+			authorized.POST("/update/password", handler.updatePassword)
 			// authorized.GET("/logout", handler.signOut)
 		}
 	}

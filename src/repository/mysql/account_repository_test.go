@@ -85,6 +85,7 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store() {
 	suite.user = domain.User{
 		Name:     "test name",
 		Email:    "test@email.com",
+		FCMToken: "1234",
 		IsOnline: false,
 		Password: password,
 	}
@@ -97,6 +98,7 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store() {
 		WithArgs(
 			suite.user.Name,
 			suite.user.Email,
+			suite.user.FCMToken,
 			suite.user.IsOnline,
 			suite.user.Password,
 		).
@@ -113,6 +115,7 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store_Error() {
 	suite.user = domain.User{
 		Name:     "test name",
 		Email:    "test@email.com",
+		FCMToken: "1234",
 		IsOnline: false,
 		Password: password,
 	}
@@ -122,6 +125,7 @@ func (suite *accountRepositoryTestSuite) TestAccountRepository_Store_Error() {
 		WithArgs(
 			suite.user.Name,
 			suite.user.Email,
+			suite.user.FCMToken,
 			suite.user.IsOnline,
 			suite.user.Password,
 		).

@@ -5,6 +5,7 @@ import (
 )
 
 type AccountService interface {
+	Edit(user *domain.User) error
 	Register(user *domain.User) error
 	Login(email string, password string) (interface{}, error)
 	Profile(email string) (*domain.User, error)

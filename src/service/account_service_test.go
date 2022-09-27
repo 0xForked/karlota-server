@@ -130,6 +130,35 @@ func (suite *accountTestSuite) TestListAccount() {
 	accountRepository.AssertExpectations(suite.T())
 }
 
+func (suite *accountTestSuite) TestUpdateFCMToken() {
+	accountRepository := new(mocks.AccountRepository)
+	suite.user.FCMToken = "loremIpsum-12345"
+	accountRepository.
+		On("Find", mock.Anything).
+		Return(&suite.user, nil).
+		Once()
+	svc := service.AccountServiceImpl(accountRepository, suite.jwt)
+	err := svc.Edit(&suite.user)
+	require.NoError(suite.T(), err)
+	accountRepository.AssertExpectations(suite.T())
+}
+
+func (suite *accountTestSuite) TestUpdatePassword() {
+	accountRepository := new(mocks.AccountRepository)
+	suite.user.Password = "lorem"
+	accountRepository.
+		On("Find", mock.Anything).
+		Return(&suite.user, nil).
+		Once()
+	accountRepository.
+		On("Edit", &suite.user).
+		Return(nil)
+	svc := service.AccountServiceImpl(accountRepository, suite.jwt)
+	err := svc.Edit(&suite.user)
+	require.NoError(suite.T(), err)
+	accountRepository.AssertExpectations(suite.T())
+}
+
 func TestAccountService(t *testing.T) {
 	suite.Run(t, new(accountTestSuite))
 }
