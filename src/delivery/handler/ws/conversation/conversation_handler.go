@@ -1,5 +1,28 @@
 package conversation
 
+import (
+	"github.com/aasumitro/karlota/pkg/ws"
+	"github.com/aasumitro/karlota/src/service"
+)
+
+type WsHandler interface {
+	OnConnected(session *ws.Session)
+	MessageHandler(s *ws.Session, msg []byte)
+	OnDisconnected(session *ws.Session)
+}
+
+type conversationHandler struct {
+	wsWrapper *ws.Melody
+	service   service.AccountService
+}
+
+func NewHandler(wsWrapper *ws.Melody, service service.AccountService, ) WsHandler {
+	return &conversationHandler{
+		wsWrapper: wsWrapper,
+		service:   service,
+	}
+}
+
 // list_chat, get_chat, start_chat
 // add_user_to_chat (opt), remove_user_from_chat (opt), (chat) !if room
 // set_online_status (chat)

@@ -24,18 +24,3 @@ func (_m *FormRequest) Validate(model interface{}, err error) map[string]string 
 
 	return r0
 }
-
-type mockConstructorTestingTNewFormRequest interface {
-	mock.TestingT
-	Cleanup(func())
-}
-
-// NewFormRequest creates a new instance of FormRequest. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-func NewFormRequest(t mockConstructorTestingTNewFormRequest) *FormRequest {
-	mock := &FormRequest{}
-	mock.Mock.Test(t)
-
-	t.Cleanup(func() { mock.AssertExpectations(t) })
-
-	return mock
-}

@@ -4,26 +4,35 @@ import (
 	"fmt"
 	"github.com/aasumitro/karlota/config"
 	"github.com/aasumitro/karlota/pkg/ws"
+	"github.com/aasumitro/karlota/src/delivery/handler/ws/conversation"
+	"github.com/aasumitro/karlota/src/repository/mysql"
+	"github.com/aasumitro/karlota/src/service"
+	"github.com/aasumitro/karlota/src/utils"
 	"github.com/gin-gonic/gin"
 )
 
-type wsHandler struct{}
-
 func NewWsHandler(config *config.Config, router *gin.Engine) {
 	m := ws.New()
+	accountRepository := mysql.AccountRepositoryImpl(
+		config.GetDbConn())
+	jwtUtils := utils.NewJWTUtil(
+		config.GetJWTSecretKey(),
+		config.GetAppName(),
+		config.GetJWTLifespan(),
+	)
+	accountService := service.AccountServiceImpl(
+		accountRepository, jwtUtils)
+	conversationHandler := conversation.NewHandler(m, accountService)
+
+	m.HandleConnect(conversationHandler.OnConnected)
 
 	router.GET("/conversation", func(c *gin.Context) {
-		err := m.HandleRequest(c.Writer, c.Request)
-		if err != nil {
+		if err := m.HandleRequest(c.Writer, c.Request); err != nil {
 			fmt.Println(err)
 		}
 	})
 
-	m.HandleMessage(func(s *ws.Session, msg []byte) {
-		if err := m.BroadcastFilter(msg, func(q *ws.Session) bool {
-			return q.Request.URL.Path == s.Request.URL.Path
-		}); err != nil {
-			fmt.Println(err)
-		}
-	})
+	m.HandleMessage(conversationHandler.MessageHandler)
+
+	m.HandleDisconnect(conversationHandler.OnDisconnected)
 }
