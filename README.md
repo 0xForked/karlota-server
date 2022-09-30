@@ -6,8 +6,8 @@
 
 ```bash
   mockery 
-  --dir=src/repository/mysql 
+  --dir=internal/app/repository/mysql 
   --name=AccountRepository 
   --filename=account_repository_impl.go 
-  --output=src/domain/mocks --outpkg=mocks
+  --output=internal/app/domain/mocks --outpkg=mocks
 ```

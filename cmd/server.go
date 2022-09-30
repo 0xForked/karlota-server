@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"github.com/aasumitro/karlota/config"
 	"github.com/aasumitro/karlota/docs"
-	httpDelivery "github.com/aasumitro/karlota/src/delivery/handler/http"
-	wsDelivery "github.com/aasumitro/karlota/src/delivery/handler/ws"
+	httpDelivery "github.com/aasumitro/karlota/internal/app/delivery/handler/http"
+	wsDelivery "github.com/aasumitro/karlota/internal/app/delivery/handler/ws"
+	"github.com/aasumitro/karlota/internal/config"
 	"github.com/gin-gonic/gin"
 	"log"
 )
