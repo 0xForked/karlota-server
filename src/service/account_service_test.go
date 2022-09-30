@@ -51,9 +51,6 @@ func (suite *accountTestSuite) TestRegister() {
 	accountRepository.
 		On("Store", &suite.user).
 		Return(nil)
-	jsonWebTokenUtil.
-		On("GetExpirationHours", mock.Anything).
-		Return(24)
 	svc := service.AccountServiceImpl(accountRepository, jsonWebTokenUtil)
 	err := svc.Register(&suite.user)
 	require.NoError(suite.T(), err)
