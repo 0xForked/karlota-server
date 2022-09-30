@@ -12,7 +12,7 @@ type accountHandler struct {
 	service service.AccountService
 }
 
-func NewHandler(router *gin.Engine, service service.AccountService, jwt utils.JWT) {
+func NewHandler(router *gin.Engine, service service.AccountService, jwt utils.JSONWebToken) {
 	handler := &accountHandler{router: router, service: service}
 
 	v1 := handler.router.Group("/v1")

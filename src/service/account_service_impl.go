@@ -11,7 +11,7 @@ import (
 
 type accountServiceImpl struct {
 	repo mysql.AccountRepository
-	jwt  utils.JWT
+	jwt  utils.JSONWebToken
 }
 
 func (acc accountServiceImpl) Register(user *domain.User) error {
@@ -31,7 +31,7 @@ func (acc accountServiceImpl) Login(email string, password string) (interface{},
 		return nil, errors.New("INVALID_PASSWORD")
 	}
 
-	lifespan := time.Duration(acc.jwt.ExpirationHours) * time.Hour
+	lifespan := time.Duration(acc.jwt.GetExpirationHours()) * time.Hour
 	tokenExpire := time.Now().Add(lifespan).Unix()
 	token, err := acc.jwt.Claim(user)
 	if err != nil {
@@ -71,12 +71,12 @@ func (acc accountServiceImpl) Edit(user *domain.User) error {
 	}
 
 	if err := acc.repo.Update(user); err != nil {
-		return err
+		return errors.New("FAILED_UPDATE_DATA")
 	}
 
 	return nil
 }
 
-func AccountServiceImpl(repo mysql.AccountRepository, jwt utils.JWT) AccountService {
+func AccountServiceImpl(repo mysql.AccountRepository, jwt utils.JSONWebToken) AccountService {
 	return &accountServiceImpl{repo: repo, jwt: jwt}
 }

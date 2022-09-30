@@ -8,19 +8,19 @@ import (
 	"time"
 )
 
-type JWT struct {
+type jwtData struct {
 	SecretKey       string
 	Issuer          string
-	ExpirationHours int64
+	ExpirationHours int
 }
 
-type MyJWTClaim struct {
+type myJWTClaim struct {
 	jwt.StandardClaims
 	Payload interface{} `json:"payload"`
 }
 
-func (j *JWT) Claim(user *domain.User) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyJWTClaim{
+func (j *jwtData) Claim(user *domain.User) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, myJWTClaim{
 		StandardClaims: jwt.StandardClaims{
 			Issuer:    j.Issuer,
 			IssuedAt:  time.Now().Unix(),
@@ -32,7 +32,7 @@ func (j *JWT) Claim(user *domain.User) (string, error) {
 	return token.SignedString([]byte(j.SecretKey))
 }
 
-func (j *JWT) Verify(signedToken string) (*jwt.Token, error) {
+func (j *jwtData) Verify(signedToken string) (*jwt.Token, error) {
 	return jwt.Parse(signedToken, func(token *jwt.Token) (interface{}, error) {
 		if method, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("INVALID_TOKEN: %s", token.Header["alg"])
@@ -45,7 +45,7 @@ func (j *JWT) Verify(signedToken string) (*jwt.Token, error) {
 }
 
 // ExtractFromHeader SendFrom Middleware c.Request.Header.Get("Authorization")
-func (j *JWT) ExtractFromHeader(token string) string {
+func (j *jwtData) ExtractFromHeader(token string) string {
 	tokenHeadName := "Bearer"
 	parts := strings.SplitN(token, " ", 2)
 
@@ -54,4 +54,20 @@ func (j *JWT) ExtractFromHeader(token string) string {
 	}
 
 	return "INVALID_TOKEN_FORMAT"
+}
+
+func (j *jwtData) GetExpirationHours() int {
+	return j.ExpirationHours
+}
+
+func NewJWTUtil(
+	secret string,
+	issuer string,
+	expired int,
+) JSONWebToken {
+	return &jwtData{
+		SecretKey:       secret,
+		Issuer:          issuer,
+		ExpirationHours: expired,
+	}
 }

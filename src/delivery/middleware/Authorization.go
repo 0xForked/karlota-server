@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func Authorization(jwtUtils utils.JWT) gin.HandlerFunc {
+func Authorization(jwtUtils utils.JSONWebToken) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		authorizationHeader := context.Request.Header.Get("Authorization")
 		if authorizationHeader == "" {
