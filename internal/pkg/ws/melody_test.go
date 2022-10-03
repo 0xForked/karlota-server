@@ -60,7 +60,7 @@ func TestEcho(t *testing.T) {
 		defer func(conn *websocket.Conn) {
 			err := conn.Close()
 			if err != nil {
-
+				t.Log(err)
 			}
 		}(conn)
 
@@ -205,7 +205,7 @@ func TestEchoBinary(t *testing.T) {
 		defer func(conn *websocket.Conn) {
 			err := conn.Close()
 			if err != nil {
-
+				t.Log(err)
 			}
 		}(conn)
 
@@ -384,7 +384,7 @@ func TestBroadcast(t *testing.T) {
 			defer func(conn *websocket.Conn) {
 				err := conn.Close()
 				if err != nil {
-
+					t.Log(err)
 				}
 			}(listeners[i])
 		}

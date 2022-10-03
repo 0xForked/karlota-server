@@ -18,7 +18,7 @@ import (
 // @Failure 500 {object} utils.ErrorRespond "INTERNAL_SERVER_ERROR_RESPOND"
 // @Router /v1/profile [GET]
 func (handler *accountHandler) profile(context *gin.Context) {
-	payload := context.MustGet("payload").(interface{})
+	payload := context.MustGet("payload")
 	email := payload.(map[string]interface{})["email"]
 
 	profile, err := handler.service.Profile(email.(string))

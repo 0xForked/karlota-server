@@ -63,6 +63,4 @@ func NewHttpRespond(context *gin.Context, code int, data interface{}) {
 		Status: http.StatusText(code),
 		Data:   msg,
 	})
-
-	return
 }

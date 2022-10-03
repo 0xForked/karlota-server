@@ -1,4 +1,4 @@
-name: Run Tests
+name: Run Linter
 
 on:
   push:
@@ -9,10 +9,10 @@ on:
       - master
 
 jobs:
-  test:
+  linter:
     strategy:
       matrix:
-        go-version: [1.19.x]
+        go-version: ["1.19.x"]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -26,8 +26,10 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Install Required Dependencies
-        run: go mod tidy -compat=1.19
+      - run: "go vet ./..."
 
-      - name: Run Tests
-        run: go test ./...
+      - uses: dominikh/staticcheck-action@v1.2.0
+        with:
+          version: "2022.1.1"
+          install-go: false
+          cache-key: ${{ matrix.go }}

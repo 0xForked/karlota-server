@@ -22,7 +22,6 @@ type accountRepositoryTestSuite struct {
 
 	accountRepository mysql2.AccountRepository
 	user              domain.User
-	users             []domain.User
 }
 
 // SetupSuite is useful in cases where the setup code is time-consuming and isn't modified in any of the tests.

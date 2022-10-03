@@ -10,43 +10,42 @@ import (
 
 // Close codes defined in RFC 6455, section 11.7.
 // Duplicate of codes from gorilla/websocket for convenience.
-const (
-	CloseNormalClosure           = 1000
-	CloseGoingAway               = 1001
-	CloseProtocolError           = 1002
-	CloseUnsupportedData         = 1003
-	CloseNoStatusReceived        = 1005
-	CloseAbnormalClosure         = 1006
-	CloseInvalidFramePayloadData = 1007
-	ClosePolicyViolation         = 1008
-	CloseMessageTooBig           = 1009
-	CloseMandatoryExtension      = 1010
-	CloseInternalServerErr       = 1011
-	CloseServiceRestart          = 1012
-	CloseTryAgainLater           = 1013
-	CloseTLSHandshake            = 1015
-)
+//const (
+//	CloseNormalClosure           = 1000
+//	CloseGoingAway               = 1001
+//	CloseProtocolError           = 1002
+//	CloseUnsupportedData         = 1003
+//	CloseNoStatusReceived        = 1005
+//	CloseAbnormalClosure         = 1006
+//	CloseInvalidFramePayloadData = 1007
+//	ClosePolicyViolation         = 1008
+//	CloseMessageTooBig           = 1009
+//	CloseMandatoryExtension      = 1010
+//	CloseInternalServerErr       = 1011
+//	CloseServiceRestart          = 1012
+//	CloseTryAgainLater           = 1013
+//	CloseTLSHandshake            = 1015
+//)
 
 // Duplicate of codes from gorilla/websocket for convenience.
 //goland:noinspection GoUnusedGlobalVariable
-var validReceivedCloseCodes = map[int]bool{
-	// see http://www.iana.org/assignments/websocket/websocket.xhtml#close-code-number
-
-	CloseNormalClosure:           true,
-	CloseGoingAway:               true,
-	CloseProtocolError:           true,
-	CloseUnsupportedData:         true,
-	CloseNoStatusReceived:        false,
-	CloseAbnormalClosure:         false,
-	CloseInvalidFramePayloadData: true,
-	ClosePolicyViolation:         true,
-	CloseMessageTooBig:           true,
-	CloseMandatoryExtension:      true,
-	CloseInternalServerErr:       true,
-	CloseServiceRestart:          true,
-	CloseTryAgainLater:           true,
-	CloseTLSHandshake:            false,
-}
+//var validReceivedCloseCodes = map[int]bool{
+// see http://www.iana.org/assignments/websocket/websocket.xhtml#close-code-number
+//	CloseNormalClosure:           true,
+//	CloseGoingAway:               true,
+//	CloseProtocolError:           true,
+//	CloseUnsupportedData:         true,
+//	CloseNoStatusReceived:        false,
+//	CloseAbnormalClosure:         false,
+//	CloseInvalidFramePayloadData: true,
+//	ClosePolicyViolation:         true,
+//	CloseMessageTooBig:           true,
+//	CloseMandatoryExtension:      true,
+//	CloseInternalServerErr:       true,
+//	CloseServiceRestart:          true,
+//	CloseTryAgainLater:           true,
+//	CloseTLSHandshake:            false,
+//}
 
 type handleMessageFunc func(*Session, []byte)
 type handleErrorFunc func(*Session, error)
@@ -158,7 +157,7 @@ func (m *Melody) HandleClose(fn func(*Session, int, string) error) {
 }
 
 // HandleRequest upgrades http requests to websocket connections and dispatches them to be handled by the Melody
-//instance.
+// instance.
 func (m *Melody) HandleRequest(w http.ResponseWriter, r *http.Request) error {
 	return m.HandleRequestWithKeys(w, r, nil)
 }
@@ -311,6 +310,6 @@ func (m *Melody) IsClosed() bool {
 }
 
 // FormatCloseMessage formats closeCode and text as a WebSocket close message.
-func FormatCloseMessage(closeCode int, text string) []byte {
-	return websocket.FormatCloseMessage(closeCode, text)
-}
+//func FormatCloseMessage(closeCode int, text string) []byte {
+//	return websocket.FormatCloseMessage(closeCode, text)
+//}

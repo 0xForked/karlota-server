@@ -2,9 +2,8 @@ package service_test
 
 import (
 	"errors"
-	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/aasumitro/karlota/internal/app/domain"
-	mocks2 "github.com/aasumitro/karlota/internal/app/domain/mocks"
+	domainMocks "github.com/aasumitro/karlota/internal/app/domain/mocks"
 	"github.com/aasumitro/karlota/internal/app/service"
 	"github.com/aasumitro/karlota/internal/app/utils"
 	"github.com/stretchr/testify/mock"
@@ -16,8 +15,7 @@ import (
 
 type accountTestSuite struct {
 	suite.Suite
-	DB   *gorm.DB
-	mock sqlmock.Sqlmock
+	DB *gorm.DB
 
 	user  domain.User
 	users []domain.User
@@ -45,8 +43,8 @@ func (suite *accountTestSuite) SetupTest() {
 }
 
 func (suite *accountTestSuite) TestRegister() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	suite.user.Password = "password"
 	accountRepository.
 		On("Store", &suite.user).
@@ -58,8 +56,8 @@ func (suite *accountTestSuite) TestRegister() {
 }
 
 func (suite *accountTestSuite) TestLogin() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	suite.user.Password = utils.Hash{}.Make("password")
 	accountRepository.
 		On("Find", mock.Anything).
@@ -78,8 +76,8 @@ func (suite *accountTestSuite) TestLogin() {
 }
 
 func (suite *accountTestSuite) TestLogin_ShouldError_NotFoundEmail() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	suite.user.Password = utils.Hash{}.Make("password")
 	accountRepository.
 		On("Find", mock.Anything).
@@ -96,8 +94,8 @@ func (suite *accountTestSuite) TestLogin_ShouldError_NotFoundEmail() {
 }
 
 func (suite *accountTestSuite) TestLogin_ShouldError_InvalidPassword() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	suite.user.Password = utils.Hash{}.Make("password")
 	accountRepository.
 		On("Find", mock.Anything).
@@ -114,8 +112,8 @@ func (suite *accountTestSuite) TestLogin_ShouldError_InvalidPassword() {
 }
 
 func (suite *accountTestSuite) TestLogin_ShouldError_FailedClaimJWT() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	suite.user.Password = utils.Hash{}.Make("password")
 	accountRepository.
 		On("Find", mock.Anything).
@@ -135,8 +133,8 @@ func (suite *accountTestSuite) TestLogin_ShouldError_FailedClaimJWT() {
 }
 
 func (suite *accountTestSuite) TestProfile() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	accountRepository.
 		On("Find", mock.Anything).
 		Return(&suite.user, nil).
@@ -149,8 +147,8 @@ func (suite *accountTestSuite) TestProfile() {
 }
 
 func (suite *accountTestSuite) TestListAccount() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	accountRepository.
 		On("All", mock.Anything).
 		Return(&suite.users, nil).
@@ -163,8 +161,8 @@ func (suite *accountTestSuite) TestListAccount() {
 }
 
 func (suite *accountTestSuite) TestUpdateFCMToken() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	suite.user.FCMToken = "loremIpsum-12345"
 	accountRepository.
 		On("Find", mock.Anything).
@@ -180,8 +178,8 @@ func (suite *accountTestSuite) TestUpdateFCMToken() {
 }
 
 func (suite *accountTestSuite) TestUpdatePassword() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	suite.user.Password = "lorem"
 	accountRepository.
 		On("Find", mock.Anything).
@@ -197,8 +195,8 @@ func (suite *accountTestSuite) TestUpdatePassword() {
 }
 
 func (suite *accountTestSuite) TestUpdate_ShouldError_USER_NOT_FOUND() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	accountRepository.
 		On("Find", mock.Anything).
 		Return(nil, errors.New("USER_NOT_FOUND")).
@@ -211,8 +209,8 @@ func (suite *accountTestSuite) TestUpdate_ShouldError_USER_NOT_FOUND() {
 }
 
 func (suite *accountTestSuite) TestUpdate_ShouldError_FAILED_UPDATE_DATA() {
-	accountRepository := new(mocks2.AccountRepository)
-	jsonWebTokenUtil := new(mocks2.JSONWebToken)
+	accountRepository := new(domainMocks.AccountRepository)
+	jsonWebTokenUtil := new(domainMocks.JSONWebToken)
 	accountRepository.
 		On("Find", mock.Anything).
 		Return(&suite.user, nil).

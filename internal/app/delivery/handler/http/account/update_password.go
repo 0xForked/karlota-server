@@ -30,7 +30,7 @@ func (handler *accountHandler) updatePassword(context *gin.Context) {
 		return
 	}
 
-	payload := context.MustGet("payload").(interface{})
+	payload := context.MustGet("payload")
 	email := payload.(map[string]interface{})["email"]
 	if err := handler.service.Edit(&domain.User{
 		Email:    email.(string),

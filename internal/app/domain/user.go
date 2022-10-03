@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"fmt"
 	"gorm.io/gorm"
 	"log"
 )
@@ -22,11 +21,10 @@ func (User) TableName() string {
 func (User) Migrate(db *gorm.DB) {
 	if !db.Migrator().HasTable(User{}.TableName()) {
 		if err := db.Migrator().AutoMigrate(User{}); err != nil {
-			log.Panicln(fmt.Sprintf(
-				"MIGRATE_ERROR(%s): %s",
+			log.Panicf("MIGRATE_ERROR(%s): %s",
 				User{}.TableName(),
 				err.Error(),
-			))
+			)
 		}
 	}
 }

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/aasumitro/karlota/internal/app/domain"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
@@ -21,10 +20,10 @@ func (cfg Config) InitDbConn() {
 	conn, err := openConnection(cfg)
 
 	if err != nil {
-		log.Panicln(fmt.Sprintf("DATABASE_ERROR: %s", err.Error()))
+		log.Panicf("DATABASE_ERROR: %s", err.Error())
 	}
 
-	log.Println(fmt.Sprintf("Database connected with %s driver . . . .", cfg.GetDbDriver()))
+	log.Printf("Database connected with %s driver . . . .", cfg.GetDbDriver())
 	setConnection(conn)
 
 	log.Println("Auto migrate tables . . . .")
@@ -37,12 +36,10 @@ func openConnection(cfg Config) (db *gorm.DB, err error) {
 	switch cfg.GetDbDriver() {
 	case sqliteDriver:
 		driver = sqlite.Open(cfg.GetDbDsnUrl())
-		break
 	case mysqlDriver:
 		driver = mysql.Open(cfg.GetDbDsnUrl())
-		break
 	default:
-		log.Panicln(fmt.Sprintf("DATABASE_ERROR: Database driver not supported!"))
+		log.Panicf("DATABASE_ERROR: Database driver not supported!")
 	}
 
 	return gorm.Open(driver, &gorm.Config{
