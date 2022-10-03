@@ -21,7 +21,7 @@ func TestJWT_Verify(t *testing.T) {
 	jwtUtil := utils.NewJWTUtil("secret", "KARLOTA SERVER", 24)
 	extractedToken := jwtUtil.ExtractFromHeader("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjQ2MTQwOTYsImlhdCI6MTY2NDUyNzY5NiwiaXNzIjoiS0FSTE9UQSBTRVJWRVIiLCJwYXlsb2FkIjp7ImlkIjoyLCJuYW1lIjoiYWFzdW1pdHJvIiwiZW1haWwiOiJoZWxsb0BhYXN1bWl0cm8uaWQiLCJmY21fdG9rZW4iOiIiLCJpc19vbmxpbmUiOmZhbHNlfX0.0uw7TyV1cXtHQ7Lj2e6vMq1uTR_wbYjBih9juAyRYSU")
 	token, err := jwtUtil.Verify(extractedToken)
-	assert.Equal(t, nil, err)
+	assert.Equal(t, "Token is expired", err.Error())
 	claims, ok := token.Claims.(jwt.MapClaims)
 	assert.Equal(t, true, ok)
 	assert.Equal(t, "KARLOTA SERVER", claims["iss"])
