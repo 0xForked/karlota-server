@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-// login godoc
+// update password godoc
 // @Schemes
 // @Summary Update Password
 // @Description Generate New Password.
@@ -15,12 +15,12 @@ import (
 // @Accept mpfd
 // @Produce json
 // @Param Authorization header string true "Insert your access token" default(Bearer <Add access token here>)
-// @Param password formData string true
+// @Param password formData string true "new password"
 // @Success 201 {object} utils.SuccessRespond "CREATED_RESPOND"
 // @Failure 400 {object} utils.ErrorRespond "BAD_REQUEST_RESPOND"
 // @Failure 422 {object} utils.ValidationErrorRespond "UNPROCESSABLE_ENTITY_RESPOND"
 // @Failure 500 {object} utils.ErrorRespond "INTERNAL_SERVER_ERROR_RESPOND"
-// @Router /v1/update/fcm [POST]
+// @Router /v1/update/password [POST]
 func (handler *accountHandler) updatePassword(context *gin.Context) {
 	var form domain.UserPasswordForm
 

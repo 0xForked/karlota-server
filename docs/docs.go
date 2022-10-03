@@ -192,7 +192,7 @@ const docTemplate = `{
         },
         "/v1/update/fcm": {
             "post": {
-                "description": "Generate Access Token (JWT).",
+                "description": "Store Firebase Cloud Messaging Token.",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -214,8 +214,66 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "firebase cloun messaging token",
+                        "description": "firebase cloud messaging token",
                         "name": "fcm_token",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "CREATED_RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.SuccessRespond"
+                        }
+                    },
+                    "400": {
+                        "description": "BAD_REQUEST_RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ErrorRespond"
+                        }
+                    },
+                    "422": {
+                        "description": "UNPROCESSABLE_ENTITY_RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ValidationErrorRespond"
+                        }
+                    },
+                    "500": {
+                        "description": "INTERNAL_SERVER_ERROR_RESPOND",
+                        "schema": {
+                            "$ref": "#/definitions/utils.ErrorRespond"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/update/password": {
+            "post": {
+                "description": "Generate New Password.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AccountHandler"
+                ],
+                "summary": "Update Password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "new password",
+                        "name": "password",
                         "in": "formData",
                         "required": true
                     }

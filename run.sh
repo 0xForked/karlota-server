@@ -5,7 +5,8 @@ if test -f "$FILE"; then
   go mod tidy -compat=1.17
   echo "Re-generate Swagger File (api-spec docs) . . ."
   swag init --parseDependency --parseInternal --parseDepth 1
-  echo "Trying to run the tests . . ."
+  echo "Trying to run the linter & tests . . ."
+  staticcheck ./...
   go test ./... -v
   echo "Trying to run the server . . ."
   go run main.go

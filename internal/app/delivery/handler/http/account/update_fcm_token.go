@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-// login godoc
+// update fcm_token godoc
 // @Schemes
 // @Summary Update FCM TOKEN
 // @Description Store Firebase Cloud Messaging Token.
