@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/aasumitro/karlota/docs"
 	httpDelivery "github.com/aasumitro/karlota/internal/app/delivery/handler/http"
+	rtcDelivery "github.com/aasumitro/karlota/internal/app/delivery/handler/rtc"
 	wsDelivery "github.com/aasumitro/karlota/internal/app/delivery/handler/ws"
 	"github.com/aasumitro/karlota/internal/config"
 	"github.com/gin-gonic/gin"
@@ -35,6 +36,8 @@ func StartServer() {
 	httpDelivery.NewHttpHandler(appConfig, ginEngine)
 
 	wsDelivery.NewWsHandler(appConfig, ginEngine)
+
+	rtcDelivery.NewWebRTCHandler(appConfig)
 
 	log.Fatal(ginEngine.Run(appConfig.GetAppUrl()))
 }

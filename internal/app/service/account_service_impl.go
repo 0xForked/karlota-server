@@ -4,18 +4,18 @@ import (
 	"errors"
 	"github.com/aasumitro/karlota/internal/app/domain"
 	"github.com/aasumitro/karlota/internal/app/repository/mysql"
-	utils2 "github.com/aasumitro/karlota/internal/app/utils"
+	"github.com/aasumitro/karlota/internal/app/utils"
 	"strconv"
 	"time"
 )
 
 type accountServiceImpl struct {
 	repo mysql.AccountRepository
-	jwt  utils2.JSONWebToken
+	jwt  utils.JSONWebToken
 }
 
 func (acc accountServiceImpl) Register(user *domain.User) error {
-	user.Password = utils2.Hash{}.Make(user.Password)
+	user.Password = utils.Hash{}.Make(user.Password)
 
 	return acc.repo.Store(user)
 }
@@ -26,7 +26,7 @@ func (acc accountServiceImpl) Login(email string, password string) (interface{},
 		return nil, errors.New("EMAIL_NOT_FOUND")
 	}
 
-	verify := utils2.Hash{}.Verify(password, user.Password)
+	verify := utils.Hash{}.Verify(password, user.Password)
 	if !verify {
 		return nil, errors.New("INVALID_PASSWORD")
 	}
@@ -67,7 +67,7 @@ func (acc accountServiceImpl) Edit(user *domain.User) error {
 	}
 
 	if newPassword != "" {
-		user.Password = utils2.Hash{}.Make(newPassword)
+		user.Password = utils.Hash{}.Make(newPassword)
 	}
 
 	if err := acc.repo.Update(user); err != nil {
@@ -77,6 +77,6 @@ func (acc accountServiceImpl) Edit(user *domain.User) error {
 	return nil
 }
 
-func AccountServiceImpl(repo mysql.AccountRepository, jwt utils2.JSONWebToken) AccountService {
+func AccountServiceImpl(repo mysql.AccountRepository, jwt utils.JSONWebToken) AccountService {
 	return &accountServiceImpl{repo: repo, jwt: jwt}
 }

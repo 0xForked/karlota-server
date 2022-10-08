@@ -3,7 +3,7 @@ package utils_test
 import (
 	"bytes"
 	"encoding/json"
-	utils2 "github.com/aasumitro/karlota/internal/app/utils"
+	"github.com/aasumitro/karlota/internal/app/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -48,12 +48,12 @@ func mockServer(context *gin.Context, content interface{}) {
 type formRequestTestSuite struct {
 	suite.Suite
 	context     *gin.Context
-	formRequest utils2.FormRequest
+	formRequest utils.FormRequest
 }
 
 func (suite *formRequestTestSuite) SetupTest() {
 	gin.SetMode(gin.TestMode)
-	suite.formRequest = utils2.NewFormRequest(mockMessage)
+	suite.formRequest = utils.NewFormRequest(mockMessage)
 	suite.context, _ = gin.CreateTestContext(httptest.NewRecorder())
 	suite.context.Request = &http.Request{Header: make(http.Header)}
 }
