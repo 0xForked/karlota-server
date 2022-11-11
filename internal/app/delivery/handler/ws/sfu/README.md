@@ -1,0 +1,1 @@
+# SFU (Selective forwarding unit) which allows WebRTC sessions to scale more efficiently
