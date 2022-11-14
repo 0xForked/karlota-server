@@ -4,12 +4,12 @@ if test -f "$FILE"; then
   echo "Validate dependencies . . ."
   go mod tidy -compat=1.17
   echo "Re-generate Swagger File (api-spec docs) . . ."
-  swag init --parseDependency --parseInternal --parseDepth 1
+  swag init -g ./cmd/api/main.go --parseDependency --parseInternal --parseDepth 1
   echo "Trying to run the linter & tests . . ."
   staticcheck ./...
   go test ./... -v
   echo "Trying to run the server . . ."
-  go run main.go
+  go run ./cmd/api/main.go
 else
   echo "==========================================================="
   echo "|  $FILE (environment) file does not exist.                |"

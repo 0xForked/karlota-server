@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/aasumitro/karlota/internal/app/domain"
+	"github.com/aasumitro/karlota/internal/api/domain"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
